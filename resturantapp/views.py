@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from . models import Category
 from . models import FoodItem
 from django.contrib import messages
-from . forms import FoodUpload
+from . forms import *
 # from django.http import HttpResponse
 # Create your views here.
 
@@ -98,3 +98,16 @@ def upload_food(request):
         else:
             messages.error(request, 'Error Uploading Food')
     return render (request, 'upload.html', {'form':form})
+
+def upload_category(request):
+    form = CategoryUpload()
+    if request.method == 'POST':
+        form = CategoryUpload(request.POST)
+        if form.is_valid():
+            upload = form.save(commit=False)
+            upload.save()
+            messages.success(request, 'Category Uploaded Successfully')
+            return redirect('index')
+        else:
+            messages.error(request, 'Error Uploading Category')
+    return render (request, 'upload_category.html', {'form':form})
